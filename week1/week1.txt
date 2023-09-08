@@ -1,6 +1,6 @@
 Divide data set in half, one half for training, other for testing
 Test how many of the elements got the correct class
-Start with 1%, 2.5%, 5%, 10%, to 100% of training to train model
+Start with 1%, 2.5%, 5%, 10%, to 100% of training to train model, not unique data sets
 Create a graph to represent the accuracy
 Depending on what labels you choose, you will get a different accuracy
 Run over as many different training sets as possible of the same size
