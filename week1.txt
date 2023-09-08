@@ -1,0 +1,7 @@
+Divide data set in half, one half for training, other for testing
+Test how many of the elements got the correct class
+Start with 5%, 10%, to 100% of training to train model
+Create a graph to represent the accuracy
+Depending on what labels you choose, you will get a different accuracy
+Run over as many different training sets as possible of the same size
+At least 10, 100 is ideal, verage out accuracy
