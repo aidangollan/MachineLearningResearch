@@ -10,10 +10,10 @@ from sklearn.svm import LinearSVC
 from datetime import datetime
 
 def train_and_evaluate(X_sample, y_sample, X_test, y_test, i):
+    print(f"running test iteration {i}")
     clf = SVC(kernel="linear")
     clf.fit(X_sample, y_sample)
     y_pred = clf.predict(X_test)
-    print(f"running test iteration {i}")
     return accuracy_score(y_test, y_pred)
 
 def main_optimized(avg_per_perc):
