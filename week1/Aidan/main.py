@@ -8,12 +8,14 @@ import numpy as np
 import plotly.graph_objects as go
 from sklearn.svm import LinearSVC
 from datetime import datetime
+import plotly.io as pio
 
 def train_and_evaluate(X_sample, y_sample, X_test, y_test, i):
     print(f"running test iteration {i}")
     clf = SVC(kernel="linear")
     clf.fit(X_sample, y_sample)
     y_pred = clf.predict(X_test)
+    print(f"test iteration {i} complete at time {datetime.now()}")
     return accuracy_score(y_test, y_pred)
 
 def main_optimized(avg_per_perc):
@@ -32,7 +34,8 @@ def main_optimized(avg_per_perc):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=42)
     
     # List of percentages
-    percentages = [1, 2.5, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100]
+    #percentages = [1, 2.5, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100]
+    percentages = [1, 12.5, 25, 50, 100]
     avg_accuracies = []
     
     print(f"starting training for average amt {avg_per_perc} at time {datetime.now()}")
@@ -47,7 +50,7 @@ def main_optimized(avg_per_perc):
             X_sample, _, y_sample, _ = train_test_split(X_train, y_train, train_size=sample_size, shuffle=True)
         print(f"running percentage {perc} with avg amt {avg_per_perc} at time {datetime.now()}")
         # Use joblib to parallelize the training
-        accuracies = Parallel(n_jobs=5)(delayed(train_and_evaluate)(
+        accuracies = Parallel(n_jobs=3)(delayed(train_and_evaluate)(
             X_sample, y_sample, X_test, y_test, i) for i in range(avg_per_perc))
         time_now = datetime.now() - time_now
         print(f"percentage {perc} with avg amt {avg_per_perc} completed at time: {datetime.now()}, total time: {time_now}")
@@ -57,7 +60,8 @@ def main_optimized(avg_per_perc):
 
 if __name__ == "__main__":
     all_data = []  # Store all the lines
-    for i in range(0, 101, 10):
+    avgs = [10, 30, 50, 100]
+    for i in avgs:
         percentages, avg_accuracies = main_optimized(i)
         all_data.append(go.Scatter(x=percentages, y=avg_accuracies, mode='lines+markers', name=f'Avg {i}'))
 
@@ -66,4 +70,6 @@ if __name__ == "__main__":
     fig.update_layout(title='Average Accuracy vs. Percentage of Training Data Used',
                       xaxis_title='Percentage of Training Data Used',
                       yaxis_title='Average Accuracy')
-    fig.show()
+    
+    # Save the figure as an image
+    pio.write_image(fig, 'plot.png')
