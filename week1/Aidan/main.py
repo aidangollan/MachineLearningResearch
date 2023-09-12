@@ -47,7 +47,7 @@ def main_optimized(avg_per_perc):
             X_sample, _, y_sample, _ = train_test_split(X_train, y_train, train_size=sample_size, shuffle=True)
         print(f"running percentage {perc} with avg amt {avg_per_perc} at time {datetime.now()}")
         # Use joblib to parallelize the training
-        accuracies = Parallel(n_jobs=-1)(delayed(train_and_evaluate)(
+        accuracies = Parallel(n_jobs=5)(delayed(train_and_evaluate)(
             X_sample, y_sample, X_test, y_test, i) for i in range(avg_per_perc))
         time_now = datetime.now() - time_now
         print(f"percentage {perc} with avg amt {avg_per_perc} completed at time: {datetime.now()}, total time: {time_now}")
