@@ -1,6 +1,7 @@
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 import pandas as pd
 from scipy.io import arff
 from joblib import Parallel, delayed
@@ -11,7 +12,7 @@ import plotly.io as pio
 
 def train_and_evaluate(X_sample, y_sample, X_test, y_test, i):
     print(f"running test iteration {i}")
-    clf = MLPClassifier(max_iter=1000)  # Increased max_iter to ensure convergence for most cases
+    clf = MLPClassifier(hidden_layer_sizes=(1, ), alpha=0.0001, solver='adam', max_iter=1000)
     clf.fit(X_sample, y_sample)
     y_pred = clf.predict(X_test)
     print(f"test iteration {i} complete at time {datetime.now()}")
@@ -19,7 +20,7 @@ def train_and_evaluate(X_sample, y_sample, X_test, y_test, i):
 
 def main_optimized(avg_per_perc):
     # Load the data
-    data, meta = arff.loadarff('C:\\Users\\Aidan\\MachineLearningResearch\\data\\Dry_Bean_Dataset.arff')
+    data, meta = arff.loadarff('C:\\Users\\Aidan\\MachineLearningResearch\\data\\Dry_Bean_Dataset.arff')  # Adjust path for your setup
     df = pd.DataFrame(data)
     
     # Convert byte strings to regular strings for the target variable
@@ -29,10 +30,14 @@ def main_optimized(avg_per_perc):
     X = df.drop(columns='Class')
     y = df['Class']
     
+    # Scale the features
+    scaler = StandardScaler()
+    X = scaler.fit_transform(X)
+    
     # Splitting the dataset into training and testing sets (50% each)
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=42)
     
-    percentages = [1, 12.5, 25, 50, 100]
+    percentages = [1, 5, 10, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100]
     avg_accuracies = []
     
     print(f"starting training for average amt {avg_per_perc} at time {datetime.now()}")
@@ -58,7 +63,7 @@ def main_optimized(avg_per_perc):
 
 if __name__ == "__main__":
     all_data = []
-    avgs = [10, 30, 50, 100]
+    avgs = [10, 20, 30, 40, 50, 60, 70, 80, 80, 100]
     for i in avgs:
         percentages, avg_accuracies = main_optimized(i)
         all_data.append(go.Scatter(x=percentages, y=avg_accuracies, mode='lines+markers', name=f'Avg {i}'))
