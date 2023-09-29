@@ -12,7 +12,7 @@ import plotly.io as pio
 
 def train_and_evaluate(X_sample, y_sample, X_test, y_test, i):
     print(f"running test iteration {i}")
-    clf = MLPClassifier(hidden_layer_sizes=(1, ), alpha=0.0001, solver='adam', max_iter=1000)
+    clf = MLPClassifier(hidden_layer_sizes=(100, 100), alpha=0.0001, solver='adam', max_iter=10000)
     clf.fit(X_sample, y_sample)
     y_pred = clf.predict(X_test)
     print(f"test iteration {i} complete at time {datetime.now()}")
@@ -63,7 +63,7 @@ def main_optimized(avg_per_perc):
 
 if __name__ == "__main__":
     all_data = []
-    avgs = [10, 20, 30, 40, 50, 60, 70, 80, 80, 100]
+    avgs = [1000]
     for i in avgs:
         percentages, avg_accuracies = main_optimized(i)
         all_data.append(go.Scatter(x=percentages, y=avg_accuracies, mode='lines+markers', name=f'Avg {i}'))
