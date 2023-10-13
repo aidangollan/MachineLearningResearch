@@ -15,7 +15,7 @@ def train_and_evaluate(X_sample, y_sample, X_test, y_test, i):
     print(f"running test iteration {i}")
     
     # Initialize the label propagation model
-    lp = LabelPropagation(kernel="knn", n_neighbors=50)
+    lp = LabelSpreading(kernel="knn", n_neighbors=50)
     
     # Fit the model with both labeled and unlabeled data
     lp.fit(X_sample, y_sample)
