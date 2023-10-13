@@ -10,11 +10,12 @@ from datetime import datetime
 import plotly.io as pio
 from sklearn.semi_supervised import LabelPropagation, LabelSpreading
 
+# Define the generator model
 def train_and_evaluate(X_sample, y_sample, X_test, y_test, i):
     print(f"running test iteration {i}")
     
     # Initialize the label propagation model
-    lp = LabelSpreading(kernel="knn", n_neighbors=15)
+    lp = LabelPropagation(kernel="knn", n_neighbors=50)
     
     # Fit the model with both labeled and unlabeled data
     lp.fit(X_sample, y_sample)
@@ -42,7 +43,7 @@ def main_optimized(avg_per_perc):
     # Splitting the dataset into training and testing sets (50% each)
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=42)
     
-    percentages = [1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100]
+    percentages = [1, 2.5, 5, 7.5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100]
     avg_accuracies = []
     
     print(f"starting training for average amt {avg_per_perc} at time {datetime.now()}")
@@ -77,4 +78,15 @@ if __name__ == "__main__":
     fig.update_layout(title='Average Accuracy vs. Percentage of Training Data Used',
                       xaxis_title='Percentage of Training Data Used',
                       yaxis_title='Average Accuracy')
-    pio.write_image(fig, 'LabelSpread1000avg.png')
+
+    # create a DataFrame to store the results
+    results_df = pd.DataFrame({'Percentage': percentages, 'Average Accuracy': avg_accuracies})
+    
+    # define the base file name
+    base_file_name = 'LabelSpread1000avgNumsWrite'
+    
+    # write the results to a csv file
+    results_df.to_csv(f'{base_file_name}.csv', index=False)
+    
+    # save the figure to a png file
+    pio.write_image(fig, f'{base_file_name}.png')
