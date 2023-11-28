@@ -8,7 +8,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.semi_supervised import LabelPropagation, LabelSpreading
 from sklearn.naive_bayes import GaussianNB
 
-AVG_AMT = 2
+AVG_AMT = 1000
 PERCENTAGES = [i for i in range(5, 101, 5)]
 PERCENTAGES.insert(0, 1)
 DATA_PATH = 'data\Dry_Bean_Dataset.arff'
@@ -35,3 +35,4 @@ def run(semi):
 
 if __name__ == "__main__":
     run(semi=False)
+    run(semi=True)
